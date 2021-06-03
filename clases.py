@@ -1,15 +1,11 @@
 from pathlib import Path
-from os import remove, mkdir
+from os import remove, mkdir, rename
 from shutil import rmtree
 
 class FileManager(object):
     """ Clase para Manipular Archivos """
 
     def __init__(self):
-        pass
-
-    # Función para crear un directorio
-    def create_dir(path, dirname):
         pass
 
     # Función para crear un archivo
@@ -56,5 +52,13 @@ class FileManager(object):
                     return True
             else:
                 return False
+        except:
+            return False
+
+    # Función para renombrar un archivo
+    def rename_file(self, filename, new_name):
+        try:
+            rename(filename, new_name)
+            return True
         except:
             return False

@@ -11,7 +11,9 @@ class MainWindow:
         self.button_create = tk.Button(self.frame, text = 'Crear Archivo', width = 25, command = self.show_create_file).pack()
         # Botón Eliminar Archivo
         self.button_delete = tk.Button(self.frame, text = 'Eliminar Archivo', width = 25, command = self.show_delete_file).pack()
-        # Botón Crear Carpeta
+        # Botón Renombrar Archivo
+        self.button_delete = tk.Button(self.frame, text = 'Renombrar Archivo', width = 25, command = self.show_rename_file).pack()
+        # Botón Crear Directorio
         self.button_delete = tk.Button(self.frame, text = 'Crear Carpeta', width = 25, command = self.show_create_directory).pack()
         # Botón Eliminar Directorio
         self.button_delete = tk.Button(self.frame, text = 'Eliminar Carpeta', width = 25, command = self.show_delete_directory).pack()
@@ -26,6 +28,10 @@ class MainWindow:
     def show_delete_file(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = WindowDeleteFile(self.newWindow)
+    # Abre ventana para crear nuevo archivo
+    def show_rename_file(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = WindowRenameFile(self.newWindow)
     # Abre ventana para crear una carpeta
     def show_create_directory(self):
         self.newWindow = tk.Toplevel(self.master)
@@ -43,8 +49,7 @@ class WindowCreateFile(MainWindow):
         self.filename = tk.StringVar()      # Guarda el nombre del archivo
 
         # Nombre del Nuevo Archivo
-        self.label = tk.Label(self.frame, text = "Nombre del archivo: ")
-        self.label.pack()
+        self.label = tk.Label(self.frame, text = "Nombre del archivo: ").pack()
         self.file_name = tk.Entry(self.frame, textvariable=self.filename).pack()
         # self.file_name.place(x=50, y=50) | Usar esto es una alternativa a .pack()
 
@@ -138,7 +143,7 @@ class WindowCreateDirectory(MainWindow):
     def close_windows(self):
         self.master.destroy()
 
-# Clase Derivada (Hijo) de 'MainWindow' | Crea un directorio(Carpeta)
+# Clase Derivada (Hijo) de 'MainWindow' | Elimina un directorio(Carpeta)
 class WindowDeleteDirectory(MainWindow):
     def __init__(self, master):
         self.master = master
@@ -169,6 +174,44 @@ class WindowDeleteDirectory(MainWindow):
                 tk.messagebox.showinfo(message="Se eliminó la carpeta '"+ directory_name +"' correctamente", title="Python File Manager")
             else:
                 tk.messagebox.showerror(message="Ocurrió un problema al eliminar la carpeta", title="¡Error!")
+        self.master.destroy()
+
+    def close_windows(self):
+        self.master.destroy()
+
+# Clase Derivada (Hijo) de 'MainWindow' | Renombra el archivo
+class WindowRenameFile(MainWindow):
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.filename = tk.StringVar()
+        self.filerename = tk.StringVar()
+
+        # Nombre del Archivo que quiere renombrar
+        self.label = tk.Label(self.frame, text = "Nombre del archivo que desea renombrar: ").pack()
+        self.file_name = tk.Entry(self.frame, textvariable=self.filename).pack()
+        # Nombre Nuevo del Archivo
+        self.label = tk.Label(self.frame, text = "Nuevo nombre del archivo: ").pack()
+        self.file_rename = tk.Entry(self.frame, textvariable=self.filerename).pack()
+
+        # Botón Crear Archivo
+        self.acceptButton = tk.Button(self.frame, text = 'Renombrar archivo', width = 25, command = self.rename_file_).pack()
+        # Botón Cancelar
+        self.quitButton = tk.Button(self.frame, text = 'Cancelar', width = 25, command = self.close_windows).pack()
+
+        self.master.title("Renombrar Archivo")
+        self.master.geometry("300x135")
+        self.master.resizable(False, False)
+        self.frame.pack()
+
+    def rename_file_(self):
+        file_name = self.filename.get()
+        file_rename = self.filerename.get()
+        manager = FileManager()
+        if ( manager.rename_file(file_name, file_rename) ):
+            tk.messagebox.showinfo(message="Se renombró el archivo correctamente", title="Python File Manager")
+        else:
+            tk.messagebox.showerror(message="Ocurrió un problema al renombrar el archivo", title="¡Error!")
         self.master.destroy()
 
     def close_windows(self):
