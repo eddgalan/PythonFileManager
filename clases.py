@@ -1,6 +1,6 @@
 from pathlib import Path
 from os import remove, mkdir, rename
-from shutil import rmtree
+from shutil import rmtree, move
 
 class FileManager(object):
     """ Clase para Manipular Archivos """
@@ -62,3 +62,12 @@ class FileManager(object):
             return True
         except:
             return False
+
+    # Función para mover archivos/carpetas
+    def move(self, path, new_path):
+        try:
+            move(path, new_path)
+            return True
+        except:
+            return False
+    
