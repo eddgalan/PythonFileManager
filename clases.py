@@ -1,5 +1,6 @@
 from pathlib import Path
-from os import remove
+from os import remove, mkdir
+from shutil import rmtree
 
 class FileManager(object):
     """ Clase para Manipular Archivos """
@@ -31,4 +32,29 @@ class FileManager(object):
             else:
                 return True
         else:
+            return False
+
+    # Función para crear un directorio (Carpeta)
+    def create_directory(self, dir_name):
+        try:
+            mkdir(dir_name)
+            return True
+        except:
+            return False
+
+    # Función para eliminar un directorio (Carpeta)
+    def delete_directory(self, dir_name):
+        fileObj = Path(dir_name)
+        try:
+            # Verifica que el directorio exista
+            if( fileObj.is_dir() ):
+                rmtree(dir_name)
+                # Verifica que el directorio ya NO exista
+                if( fileObj.is_dir() ):
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        except:
             return False
