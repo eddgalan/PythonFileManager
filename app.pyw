@@ -79,6 +79,7 @@ class WindowCreateFile(MainWindow):
         self.master.title("Crear Archivo")
         self.master.geometry("300x100")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def create_file(self):
@@ -115,6 +116,7 @@ class WindowDeleteFile(MainWindow):
         self.master.title("Eliminar Archivo")
         self.master.geometry("300x100")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def delete_file(self):
@@ -152,20 +154,21 @@ class WindowRenameFile(MainWindow):
         self.master.title("Renombrar Archivo")
         self.master.geometry("300x135")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
-        def rename_file_(self):
-            file_name = self.filename.get()
-            file_rename = self.filerename.get()
-            manager = FileManager()
-            if ( manager.rename_file(file_name, file_rename) ):
-                tk.messagebox.showinfo(message="Se renombró el archivo correctamente", title="Python File Manager")
-            else:
-                tk.messagebox.showerror(message="Ocurrió un problema al renombrar el archivo", title="¡Error!")
-                self.master.destroy()
+    def rename_file_(self):
+        file_name = self.filename.get()
+        file_rename = self.filerename.get()
+        manager = FileManager()
+        if ( manager.rename_file(file_name, file_rename) ):
+            tk.messagebox.showinfo(message="Se renombró el archivo correctamente", title="Python File Manager")
+        else:
+            tk.messagebox.showerror(message="Ocurrió un problema al renombrar el archivo", title="¡Error!")
+            self.master.destroy()
 
-                def close_windows(self):
-                    self.master.destroy()
+    def close_windows(self):
+        self.master.destroy()
 
 # Clase Derivada (Hijo) de 'MainWindow' | Crea un directorio(Carpeta)
 class WindowCreateDirectory(MainWindow):
@@ -185,6 +188,7 @@ class WindowCreateDirectory(MainWindow):
         self.master.title("Crear Carpeta")
         self.master.geometry("300x100")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def create_directory(self):
@@ -217,6 +221,7 @@ class WindowDeleteDirectory(MainWindow):
         self.master.title("Eliminar Carpeta")
         self.master.geometry("300x100")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def delete_directory(self):
@@ -258,6 +263,7 @@ class WindowRenameDirectory(MainWindow):
         self.master.title("Renombrar Carpeta")
         self.master.geometry("300x135")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def rename_directory(self):
@@ -296,6 +302,7 @@ class WindowMoveDirectory(MainWindow):
         self.master.title("Renombrar Carpeta")
         self.master.geometry("300x135")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def move(self):
@@ -330,6 +337,7 @@ class WindowSelectDirectory(MainWindow):
         self.master.title("Mostrar contenido")
         self.master.geometry("300x100")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
 
     def show_select_dir(self):
@@ -393,13 +401,10 @@ class WindowListDirectory(MainWindow):
         self.quitButton = tk.Button(self.frame, text = 'Cerrar', width = 25, command = self.close_windows).pack()
 
         self.master.title("Mostrando contenido de la carpeta")
-        self.master.geometry("300x350")
+        self.master.geometry("500x350")
         self.master.resizable(False, False)
+        self.master.iconbitmap('icon.ico')
         self.frame.pack()
-
-    def show_select_dir(self):
-        self.newWindow = tk.Toplevel(self.master)
-        self.app = WindowListDirectory(self.newWindow)
 
     def close_windows(self):
         self.master.destroy()
@@ -409,6 +414,7 @@ def main():
     root.geometry("600x350")
     root.resizable(False, False)
     root.title("ESIME CULHUACAN ♥ | Python File Manager")
+    root.iconbitmap('icon.ico')
     app = MainWindow(root)
     root.mainloop()
 
