@@ -1,5 +1,5 @@
 from pathlib import Path
-from os import remove, mkdir, rename
+from os import remove, mkdir, rename, getcwd, listdir, path
 from shutil import rmtree, move
 
 class FileManager(object):
@@ -70,4 +70,18 @@ class FileManager(object):
             return True
         except:
             return False
-    
+
+    # Función que devuelve el contenido de una carpeta
+    def get_content(self, path):
+        if(path == ''):
+            contenido = listdir('./')
+        else:
+            contenido = listdir(path)
+        return contenido
+
+    # Función que verifica si el directorio existe
+    def directory_exist(self, directory):
+        if( path.isdir(directory) ):
+            return True
+        else:
+            return False

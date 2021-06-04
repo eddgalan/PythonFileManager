@@ -21,6 +21,8 @@ class MainWindow:
         self.button_rename_dir = tk.Button(self.frame, text = 'Renombrar Carpeta', width = 25, command = self.show_rename_directory).pack()
         # Botón Mover Archivo/Carpeta
         self.button_move = tk.Button(self.frame, text = 'Mover Archivo/Carpeta', width = 25, command = self.show_move).pack()
+        # Botón Mostrar Directorio
+        self.button_show_dir = tk.Button(self.frame, text = 'Listar contenido', width = 25, command = self.show_list_directory).pack()
 
 
         self.frame.pack()
@@ -52,6 +54,10 @@ class MainWindow:
     def show_move(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = WindowMoveDirectory(self.newWindow)
+    # Abre ventana para indicar qué directorio se desea consultar
+    def show_list_directory(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = WindowSelectDirectory(self.newWindow)
 
 # Clase Derivada (Hijo) de 'MainWindow' | Crea el archivo
 class WindowCreateFile(MainWindow):
@@ -79,7 +85,7 @@ class WindowCreateFile(MainWindow):
         file_name = self.filename.get()
         manager = FileManager()
         if ( manager.create_file(file_name) ):
-            tk.messagebox.showinfo(message="Se creo el archivo "+ file_name +" correctamente", title="Python File Manager")
+            tk.messagebox.showinfo(message="Se creo el archivo '"+ file_name +"' correctamente", title="Python File Manager")
         else:
             tk.messagebox.showerror(message="Ocurrió un problema al crear el archivo", title="¡Error!")
         self.master.destroy()
@@ -301,6 +307,99 @@ class WindowMoveDirectory(MainWindow):
         else:
             tk.messagebox.showerror(message="Ocurrió un problema al mover el archivo/carpeta", title="¡Error!")
         self.master.destroy()
+
+    def close_windows(self):
+        self.master.destroy()
+
+# Clase Derivada (Hijo) de 'MainWindow' | Muestra el Formulario para indicar el directorio
+class WindowSelectDirectory(MainWindow):
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.directoryname = tk.StringVar()
+
+        # Nombre del directorio que se quiere Mostrar
+        self.label = tk.Label(self.frame, text = "Directorio: ").pack()
+        self.directory_name = tk.Entry(self.frame, textvariable=self.directoryname).pack()
+
+        # Botón Mostrar Directorio
+        self.acceptButton = tk.Button(self.frame, text = 'Mostrar contenido', width = 25, command = self.show_select_dir).pack()
+        # Botón Cancelar
+        self.quitButton = tk.Button(self.frame, text = 'Cancelar', width = 25, command = self.close_windows).pack()
+
+        self.master.title("Mostrar contenido")
+        self.master.geometry("300x100")
+        self.master.resizable(False, False)
+        self.frame.pack()
+
+    def show_select_dir(self):
+        directoryname = self.directoryname.get()
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = WindowListDirectory(self.newWindow, directoryname)
+
+    def close_windows(self):
+        self.master.destroy()
+
+# Clase Derivada (Hijo) de 'MainWindow' | Muestra la ventana con los archivos/carpetas
+class WindowListDirectory(MainWindow):
+    def __init__(self, master, directoryname):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.directoryname = tk.StringVar()
+
+        manager = FileManager()
+        content = manager.get_content(directoryname)          #Obtiene el contenido de la carpeta
+
+        if(content):
+            # print(content)
+            directories = []
+            files = []
+            hidden_files = []
+            for item in content:
+                # Verifica si es un archivo oculto
+                if( item.find(".")==0 ):
+                    hidden_files.append(item)
+                elif( item.find(".")== -1 ):
+                    # Verifica si es un directorio
+                    if( manager.directory_exist(directoryname +"./"+ item) ):
+                        directories.append(item)
+                # Si NO es un archivo oculto o directorio entonces es un archivo
+                else:
+                    files.append(item)
+            # Muestra un label con un mensaje
+            msg = "Mostrando el contenido del directorio '"+ directoryname +"'"
+            tk.Label(self.frame, text = msg).pack()
+
+            # Muestra las carpetas
+            if( directories ):
+                tk.Label(self.frame, text = "Carpetas: ", fg="green").pack()
+                for directory in directories:
+                    tk.Label(self.frame, text = directory).pack()
+            # Muestra los archivos
+            if( files ):
+                tk.Label(self.frame, text = "Archivos: ", fg="green").pack()
+                for directory in files:
+                    tk.Label(self.frame, text = directory).pack()
+            # Muestra los archivos ocultos
+            if( hidden_files ):
+                tk.Label(self.frame, text = "Archivos ocultos: " ,fg="green").pack()
+                for directory in hidden_files:
+                    tk.Label(self.frame, text = directory).pack()
+        else:
+            tk.messagebox.showerror(message="Ocurrió un error al listar el contenido del directorio '"+ directoryname +
+             "' o el directorio se encuentra vacío verifique que el directorio exista", title="¡Error!")
+
+        # Botón Cancelar
+        self.quitButton = tk.Button(self.frame, text = 'Cerrar', width = 25, command = self.close_windows).pack()
+
+        self.master.title("Mostrando contenido de la carpeta")
+        self.master.geometry("300x350")
+        self.master.resizable(False, False)
+        self.frame.pack()
+
+    def show_select_dir(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = WindowListDirectory(self.newWindow)
 
     def close_windows(self):
         self.master.destroy()
